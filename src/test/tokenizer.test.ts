@@ -1,0 +1,78 @@
+import "@testing-library/jest-dom";
+import { Token, TokenType, tokenizer } from "@/utils/tokenizer";
+
+import { render } from "@testing-library/react";
+
+describe("Tokenizador", () => {
+  it("debería retornar un arreglo vacío con una cadena vacía", () => {
+    const result = tokenizer("");
+    expect(result).toEqual([]);
+  });
+
+  it("debería de reconocer espacios en blanco y saltos de línea", () => {
+    const code = "  \n  ";
+    const tokens = tokenizer(code);
+
+    expect(tokens.length).toBeGreaterThan(0);
+    expect(tokens.some((token) => token.type === "WHITESPACE")).toBe(true);
+    expect(tokens.some((token) => token.type === "NEWLINE")).toBe(true);
+  });
+
+  it("debería de reconocer posiciones y valores", () => {
+    const code = "MOV ax,val1";
+    const tokens = tokenizer(code);
+
+    expect(tokens).toEqual([
+      {
+        type: "KEYWORD",
+        start: 0,
+        end: 3,
+        value: "MOV",
+      },
+      {
+        type: "WHITESPACE",
+        start: 3,
+        end: 4,
+        value: " ",
+      },
+      {
+        type: "UNKNOWN",
+        start: 4,
+        end: 6,
+        value: "ax",
+      },
+      {
+        type: "UNKNOWN",
+        start: 6,
+        end: 7,
+        value: ",",
+      },
+      {
+        type: "UNKNOWN",
+        start: 7,
+        end: 11,
+        value: "val1",
+      },
+    ]);
+  });
+
+  it("debería identificar etiquetas", () => {
+    const code = "inicio:";
+    const tokens = tokenizer(code);
+
+    expect(tokens[0]).toEqual({
+      type: "LABEL",
+      start: 0,
+      end: 7,
+      value: "inicio:",
+    });
+  });
+
+  it("debería manejar comentarios", () => {
+    const code = "; Hello world";
+    const tokens = tokenizer(code);
+
+    expect(tokens[0].type).toBe("COMMENT");
+    expect(tokens[0].value).toBe("; Hello world");
+  });
+});

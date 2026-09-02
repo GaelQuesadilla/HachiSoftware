@@ -1,11 +1,14 @@
-"use client";
-
 import { useCodeEditor } from "./hooks/useCodeEditor";
 import CodeTextArea from "./atoms/codeTextArea";
 import { EditorContainer } from "./atoms/editorContainer";
+import { Dispatch, SetStateAction } from "react";
 
-export default function CodeArea() {
-  const { code, setCode } = useCodeEditor("");
+interface CodeArea {
+  code: string;
+  setCode: Dispatch<SetStateAction<string>>;
+}
+
+export default function CodeArea({ code, setCode }: CodeArea) {
   return (
     <>
       <EditorContainer>

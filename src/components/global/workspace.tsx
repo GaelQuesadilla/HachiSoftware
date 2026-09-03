@@ -10,7 +10,7 @@ export const Workspace = () => {
     <>
       <div
         id="workspace"
-        className="grid grid-cols-2 h-full, w-full overflow-hidden"
+        className="grid grid-cols-2 h-max, w-full overflow-hidden"
       >
         <CodeArea code={code} setCode={setCode} />
         <LexicalView code={code} />

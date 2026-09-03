@@ -15,7 +15,7 @@ export default function CodeTextArea({ code, setCode }: CodeTextAreaProps) {
         value={code}
         onChange={(e) => setCode(e.target.value)}
         rows={20}
-        className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-auto"
+        className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-auto z-20"
         name="code-area"
         autoComplete="false"
       ></textarea>

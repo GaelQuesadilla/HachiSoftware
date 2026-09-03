@@ -22,7 +22,7 @@ export const tokenizer = (code: string): Token[] => {
 
   // 1: COMMENTS, 2: LABELS, 3: NUMBERS, 4: WORDS, 6: NEWLINE, 6: WHITESPACES, , 7: UNKNOWN
   const regex =
-    /(;.*\n)|([a-zA-Z_]\w*:)|(0x[0-9a-fA-F]+|\b\d+\b|[\da0-9a-fA-F]+h)|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
+    /(;.*)|([a-zA-Z_]\w*:)|(0x[0-9a-fA-F]+|\b\d+\b|[\da0-9a-fA-F]+h)|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
 
   let match: RegExpExecArray | null;
 
@@ -54,4 +54,33 @@ export const tokenizer = (code: string): Token[] => {
     tokens.push({ type, value, start, end });
   }
   return tokens;
+};
+
+export const optimizedTokenizer = (code: string): Token[] => {
+  /**
+   * Devuelve una lista de tokens optimizados eliminando espacios en blanco y saltos de línea
+   */
+
+  let tokens = tokenizer(code);
+
+  let optimizedTokens: Token[] = [];
+
+  for (const token of tokens) {
+    if (token.type === "COMMENT") {
+      continue;
+    }
+
+    if (token.type === "NEWLINE") {
+      const lastToken = optimizedTokens[optimizedTokens.length - 1];
+
+      if (lastToken && lastToken.type === "NEWLINE") {
+        lastToken.value += token.value;
+        lastToken.end = token.end;
+        continue;
+      }
+    }
+
+    optimizedTokens.push(token);
+  }
+  return optimizedTokens;
 };

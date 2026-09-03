@@ -5,5 +5,5 @@ interface EditorContainerProps {
 }
 
 export const EditorContainer = ({ children }: EditorContainerProps) => {
-  return <div className="h-full w-full">{children}</div>;
+  return <div className="h-full w-full z-20">{children}</div>;
 };

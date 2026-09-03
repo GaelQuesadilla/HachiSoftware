@@ -1,5 +1,5 @@
 "use client";
-import { Token, tokenizer } from "@/utils/tokenizer";
+import { optimizedTokenizer, Token, tokenizer } from "@/utils/tokenizer";
 import { useMemo } from "react";
 import { Chip } from "./typeChips/chip";
 
@@ -8,12 +8,12 @@ interface TokenViewerProps {
 }
 
 export const LexicalView = ({ code }: TokenViewerProps) => {
-  const tokens: Token[] = useMemo(() => tokenizer(code), [code]);
+  const tokens: Token[] = useMemo(() => optimizedTokenizer(code), [code]);
 
   console.log(tokens);
   return (
     <>
-      <div className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-auto">
+      <div className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-y-visible z-50 ">
         {tokens.map((token, index) => {
           return <Chip token={token} key={index} />;
         })}

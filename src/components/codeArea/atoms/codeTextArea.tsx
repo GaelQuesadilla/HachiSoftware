@@ -1,24 +1,19 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
-import { useCodeEditor } from "../hooks/useCodeEditor";
+import { useCodeContext } from "@/components/contexts/codeContext";
 
-interface CodeTextAreaProps {
-  code: string;
-  setCode: Dispatch<SetStateAction<string>>;
-}
+export default function CodeTextArea() {
+  // Consumimos `rawCode` para la respuesta inmediata al escribir
+  const { rawCode, setCode } = useCodeContext();
 
-export default function CodeTextArea({ code, setCode }: CodeTextAreaProps) {
   return (
-    <>
-      <textarea
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        rows={20}
-        className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-auto z-20"
-        name="code-area"
-        autoComplete="false"
-      ></textarea>
-    </>
+    <textarea
+      value={rawCode}
+      onChange={(e) => setCode(e.target.value)}
+      rows={20}
+      className="bg-stone-800 p-5 text-amber-50 font-mono w-full h-full resize-none overflow-auto z-20"
+      name="code-area"
+      autoComplete="off"
+    />
   );
 }

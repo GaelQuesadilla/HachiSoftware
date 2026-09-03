@@ -1,11 +1,14 @@
-import CodeArea from "@/components/codeArea/codeArea";
+import { CodeProvider } from "@/components/contexts/codeContext";
 import { Workspace } from "@/components/global/workspace";
-import { TokenViewer } from "@/components/lexicalView/lexicalView";
+import { Navbar } from "@/navbar/atoms/navbar";
 
 export default function Home() {
   return (
     <>
-      <Workspace />
+      <CodeProvider>
+        <Navbar />
+        <Workspace />
+      </CodeProvider>
     </>
   );
 }

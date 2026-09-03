@@ -2,13 +2,11 @@
 import { optimizedTokenizer, Token, tokenizer } from "@/utils/tokenizer";
 import { useMemo } from "react";
 import { Chip } from "./typeChips/chip";
+import { useCodeContext } from "../contexts/codeContext";
 
-interface TokenViewerProps {
-  code: string;
-}
-
-export const LexicalView = ({ code }: TokenViewerProps) => {
-  const tokens: Token[] = useMemo(() => optimizedTokenizer(code), [code]);
+export const LexicalView = () => {
+  const { rawCode } = useCodeContext();
+  const tokens: Token[] = useMemo(() => optimizedTokenizer(rawCode), [rawCode]);
 
   console.log(tokens);
   return (

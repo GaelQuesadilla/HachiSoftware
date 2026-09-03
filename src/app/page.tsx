@@ -1,6 +1,6 @@
 import { CodeProvider } from "@/components/contexts/codeContext";
 import { Workspace } from "@/components/global/workspace";
-import { Navbar } from "@/navbar/atoms/navbar";
+import { Navbar } from "@/navbar/navbar";
 
 export default function Home() {
   return (

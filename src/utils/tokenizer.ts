@@ -22,7 +22,7 @@ export const tokenizer = (code: string): Token[] => {
 
   // 1: COMMENTS, 2: LABELS, 3: NUMBERS, 4: WORDS, 6: NEWLINE, 6: WHITESPACES, , 7: UNKNOWN
   const regex =
-    /(;.*)|([a-zA-Z_]\w*:)|(0x[0-9a-fA-F]+|\b\d+\b|[\da0-9a-fA-F]+h)|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
+    /(;.*)|([a-zA-Z_]\w*:)|(0x[0-9a-fA-F]+|\b\d+\b|[\da0-9a-fA-F]+[h|b|o|u])|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
 
   let match: RegExpExecArray | null;
 

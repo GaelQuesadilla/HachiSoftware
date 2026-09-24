@@ -5,6 +5,7 @@ Elaborado por:
 
 1. Frida Alejandra Mendoza Martinez - 2421064
 2. Gael González Méndez - 2421043
+3. Gabriell Quetzalli Santana Reyes - 2421087
 
 ## Inicio
 

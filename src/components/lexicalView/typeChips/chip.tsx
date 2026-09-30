@@ -1,28 +1,49 @@
-import { TokenType, Token } from "@/utils/tokenizer";
+import type { Token, TokenType } from "@/utils/tokenizer";
 
 interface ChipProps {
   token: Token;
+  showComments?: boolean;
 }
-export const Chip = ({ token }: ChipProps) => {
-  if (token.type === "COMMENT") return <></>;
+
+const STYLES: Record<TokenType, string> = {
+  COMMENT: "text-stone-500 italic",
+  NEWLINE: "text-stone-500",
+  WHITESPACE: "text-stone-500",
+  LABEL: "text-fuchsia-400",
+  DIRECTIVE: "text-emerald-400",
+  KEYWORD: "text-rose-400",
+  DATA_TYPE: "text-amber-300",
+  REGISTER_GP: "text-sky-400",
+  REGISTER_CONTROL: "text-cyan-300",
+  REGISTER_SEGMENT: "text-teal-300",
+  INSTRUCTION: "text-orange-400",
+  NUMBER: "text-indigo-300",
+  STRING: "text-lime-300",
+  IDENTIFIER: "text-stone-100",
+  PUNCTUATION: "text-stone-400",
+  UNKNOWN: "text-red-400 underline decoration-wavy",
+};
+
+export const Chip = ({ token, showComments = false }: ChipProps) => {
+  if (token.type === "COMMENT" && !showComments) return null;
+
   if (token.type === "NEWLINE")
     return (
-      <span className="text-stone-500 px-5">
+      <span className={`${STYLES.NEWLINE} px-5`}>
         {"\\n"}
         <br />
       </span>
     );
   if (token.type === "WHITESPACE")
-    return <span className="text-stone-500 px-2">_</span>;
+    return <span className={`${STYLES.WHITESPACE} px-2`}>_</span>;
 
-  if (token.type === "KEYWORD")
-    return <span className="text-rose-500">{token.value}</span>;
-  if (token.type === "DIRECTIVE")
-    return <span className="text-emerald-600">{token.value}</span>;
-  if (token.type === "LABEL")
-    return <span className="text-fuchsia-700">{token.value}</span>;
-  if (token.type === "NUMBER")
-    return <span className="text-indigo-700">{token.value}</span>;
-
-  return <span className="text-white">{token.value}</span>;
+  return (
+    <span
+      className={STYLES[token.type]}
+      title={token.error ?? (token.base ? `${token.type} (${token.base})` : token.type)}
+    >
+      {token.value}
+    </span>
+  );
 };
+

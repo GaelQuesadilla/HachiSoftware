@@ -1,49 +1,58 @@
-import type { Token, TokenType } from "@/utils/tokenizer";
+import { TOKEN_CHIP_COLORS } from "@/constants/TOKEN_COLORS";
+import { TokenType, Token } from "@/utils/tokenizer";
+import { useRef, useState } from "react";
+import { ChipDetails } from "./chipDetails";
 
 interface ChipProps {
   token: Token;
   showComments?: boolean;
 }
 
-const STYLES: Record<TokenType, string> = {
-  COMMENT: "text-stone-500 italic",
-  NEWLINE: "text-stone-500",
-  WHITESPACE: "text-stone-500",
-  LABEL: "text-fuchsia-400",
-  DIRECTIVE: "text-emerald-400",
-  KEYWORD: "text-rose-400",
-  DATA_TYPE: "text-amber-300",
-  REGISTER_GP: "text-sky-400",
-  REGISTER_CONTROL: "text-cyan-300",
-  REGISTER_SEGMENT: "text-teal-300",
-  INSTRUCTION: "text-orange-400",
-  NUMBER: "text-indigo-300",
-  STRING: "text-lime-300",
-  IDENTIFIER: "text-stone-100",
-  PUNCTUATION: "text-stone-400",
-  UNKNOWN: "text-red-400 underline decoration-wavy",
+const WhiteSpaceChip = () => {
+  return <div className="text-[#75715E] px-3 text-xs inline">·</div>;
+};
+const NewLineChip = () => {
+  return <div className="text-[#75715E] my-3"></div>;
 };
 
-export const Chip = ({ token, showComments = false }: ChipProps) => {
-  if (token.type === "COMMENT" && !showComments) return null;
+export const Chip = ({ token }: ChipProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [placeBelow, setPlaceBelow] = useState(false);
+  const chipRef = useRef<HTMLDivElement>(null);
 
-  if (token.type === "NEWLINE")
-    return (
-      <span className={`${STYLES.NEWLINE} px-5`}>
-        {"\\n"}
-        <br />
-      </span>
-    );
-  if (token.type === "WHITESPACE")
-    return <span className={`${STYLES.WHITESPACE} px-2`}>_</span>;
+  const handleMouseEnter = () => {
+    if (chipRef.current) {
+      const rect = chipRef.current.getBoundingClientRect();
+      console.debug(rect.top);
+      if (rect.top < 115) {
+        setPlaceBelow(true);
+      } else {
+        setPlaceBelow(false);
+      }
+    }
+    setIsHovered(true);
+  };
 
+  if (token.type === "COMMENT") return null;
+  if (token.type === "WHITESPACE") return <WhiteSpaceChip />;
+  if (token.type === "NEWLINE") return <NewLineChip />;
+
+  const color = TOKEN_CHIP_COLORS[token.type];
   return (
-    <span
-      className={STYLES[token.type]}
-      title={token.error ?? (token.base ? `${token.type} (${token.base})` : token.type)}
+    <div
+      className="relative inline-block mx-2"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {token.value}
-    </span>
+      <ChipDetails display={isHovered} token={token} placeBelow={placeBelow} />
+      <div
+        className={`px-3 py-0.5 rounded outline-2 outline-black transition-all duration-200 cursor-pointer
+          ${color}
+          ${isHovered ? "brightness-110 shadow-2xl scale-150 z-50" : ""}`}
+        ref={chipRef}
+      >
+        {token.value}
+      </div>
+    </div>
   );
 };
-

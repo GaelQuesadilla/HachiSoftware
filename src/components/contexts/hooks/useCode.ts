@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export const useCodeEditor = (inputCode = "") => {
+export const useCode = (inputCode = "") => {
   const [code, setCode] = useState(inputCode);
 
   return { code, setCode };

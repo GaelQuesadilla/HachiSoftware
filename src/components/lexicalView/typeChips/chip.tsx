@@ -23,7 +23,7 @@ export const Chip = ({ token }: ChipProps) => {
     if (chipRef.current) {
       const rect = chipRef.current.getBoundingClientRect();
       console.debug(rect.top);
-      if (rect.top < 80) {
+      if (rect.top < 115) {
         setPlaceBelow(true);
       } else {
         setPlaceBelow(false);

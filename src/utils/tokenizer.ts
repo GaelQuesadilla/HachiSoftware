@@ -1,12 +1,27 @@
+import {
+  dataDirective,
+  dataType,
+  mnemonics,
+  registers,
+  reserved,
+  dotDirective,
+  sections,
+} from "@/constants/ASSEMBLY";
+
 export type TokenType =
   | "COMMENT"
   | "LABEL"
   | "NUMBER"
-  | "KEYWORD"
+  | "RESERVED"
+  | "REGISTER"
+  | "TYPE"
+  | "DIRECTIVE"
+  | "MNEMONIC"
   | "WHITESPACE"
   | "NEWLINE"
-  | "UNKNOWN"
-  | "DIRECTIVE";
+  | "VARIABLE"
+  | "SECTION"
+  | "UNKNOWN";
 
 export interface Token {
   type: TokenType;
@@ -15,19 +30,19 @@ export interface Token {
   value: string;
 }
 
-const keywords = ["MOV", "ADD", "SUB", "DW", "SEGMENT"];
-
 export const tokenizer = (code: string): Token[] => {
   let tokens: Token[] = [];
 
-  // 1: COMMENTS, 2: LABELS, 3: NUMBERS, 4: WORDS, 6: NEWLINE, 6: WHITESPACES, , 7: UNKNOWN
+  // 1: COMMENTS, 2: LABELS, 3: NUMBERS, 4: WORDS, : NEWLINE, 6: WHITESPACES, , 7: UNKNOWN
   const regex =
-    /(;.*)|([a-zA-Z_]\w*:)|(0x[0-9a-fA-F]+|\b\d+\b|[\da0-9a-fA-F]+[h|b|o|u])|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
+    /(;.*)|([a-zA-Z_]\w*:)|(\b[0-9][0-9a-fA-F]*[hqodbrtyHQODBRTY]?\b)|(\.*[a-zA-Z_]\w*)|(\n)+|(\t| )+|(.)/g;
 
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(code)) !== null) {
     const value = match[0];
+    const value_upper = match[0].toUpperCase();
+
     const start = match.index;
     const end = start + value.length;
 
@@ -39,12 +54,46 @@ export const tokenizer = (code: string): Token[] => {
       type = "LABEL";
     } else if (match[3]) {
       type = "NUMBER";
+
+      let i = tokens.length - 1;
+      while (i >= 0 && tokens[i].type === "WHITESPACE") i--; // i representa el índice del último token que no sea considerado un espacio en blanco
+
+      if (tokens[i].type == "SECTION") {
+        if (reserved.includes(value)) {
+          type = "RESERVED";
+        }
+      }
     } else if (match[4]) {
+      type = "VARIABLE";
+
       if (value.startsWith(".")) {
+        type = "UNKNOWN";
+
+        if (dotDirective.includes(value_upper)) {
+          type = "DIRECTIVE";
+        } else if (sections.includes(value_upper)) {
+          type = "SECTION";
+        }
+      }
+      // Directives
+      else if (dataDirective.includes(value_upper)) {
         type = "DIRECTIVE";
       }
-      if (keywords.includes(value.toUpperCase())) {
-        type = "KEYWORD";
+      //Mnemonics
+      else if (mnemonics.includes(value_upper)) {
+        type = "MNEMONIC";
+      }
+      // Registers
+      else if (registers.includes(value_upper)) {
+        type = "REGISTER";
+      }
+      // Data types
+      else if (dataType.includes(value_upper)) {
+        type = "TYPE";
+      }
+      // Reserved words
+      else if (reserved.includes(value_upper)) {
+        type = "RESERVED";
       }
     } else if (match[5]) {
       type = "NEWLINE";

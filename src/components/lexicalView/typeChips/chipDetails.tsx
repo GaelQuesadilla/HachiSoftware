@@ -26,7 +26,7 @@ export const ChipDetails = ({
   return (
     <>
       <div
-        className={`absolute bg-[#1e1f1c] z-50 min-w-40 max-w-50 outline left-1/2 -translate-x-1/2 rounded-md p-2 shadow-2xl justify-between select-none h-14
+        className={`absolute bg-[#1e1f1c] z-50 min-w-50 max-w-60 outline left-1/2 -translate-x-1/2 rounded-md p-2 shadow-2xl justify-between select-none h-14
         ${placeBelow ? "translate-y-4 top-full" : "-translate-y-4 bottom-full"}
         `}
       >

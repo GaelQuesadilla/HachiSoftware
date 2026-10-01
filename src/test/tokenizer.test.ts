@@ -24,7 +24,7 @@ describe("Tokenizador", () => {
 
     expect(tokens).toEqual([
       {
-        type: "KEYWORD",
+        type: "MNEMONIC",
         start: 0,
         end: 3,
         value: "MOV",
@@ -36,7 +36,7 @@ describe("Tokenizador", () => {
         value: " ",
       },
       {
-        type: "UNKNOWN",
+        type: "VARIABLE",
         start: 4,
         end: 6,
         value: "ax",
@@ -48,7 +48,7 @@ describe("Tokenizador", () => {
         value: ",",
       },
       {
-        type: "UNKNOWN",
+        type: "VARIABLE",
         start: 7,
         end: 11,
         value: "val1",
